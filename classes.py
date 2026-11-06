@@ -1726,6 +1726,10 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
         self._queue = None
         self._ping_timer = None
         self._socket = None
+        # OpenSSL does not allow one SSL object to be read and written from two threads at the same
+        # time. The select thread reads while the queue thread writes, so every operation on the
+        # socket takes this lock. All socket calls are non-blocking, so holding it is always brief.
+        self._socket_lock = threading.RLock()
         self._buffer = bytearray()
         self._reconnect_thread = None
         self._queue_thread = None
@@ -1819,7 +1823,8 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
         """
         Implements additional SSL/TLS verifications (so far, only certificate fingerprints when enabled).
         """
-        peercert = self._socket.getpeercert(binary_form=True)
+        with self._socket_lock:
+            peercert = self._socket.getpeercert(binary_form=True)
 
         # Hash type is configurable using the ssl_fingerprint_type
         # value, and defaults to sha256.
@@ -1980,7 +1985,8 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
                 pass
             try:
                 log.debug('(%s) disconnect: shutting down read half of socket %s', self.name, self._socket)
-                self._socket.shutdown(socket.SHUT_RD)
+                with self._socket_lock:
+                    self._socket.shutdown(socket.SHUT_RD)
             except:
                 log.debug('(%s) Error on socket shutdown:', self.name, exc_info=True)
 
@@ -1988,7 +1994,8 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
             # Wait for the write half to shut down when applicable.
             if self._queue_thread is None or self._aborted_send.wait(10):
                 log.debug('(%s) disconnect: closing socket %s', self.name, self._socket)
-                self._socket.close()
+                with self._socket_lock:
+                    self._socket.close()
 
         # Stop the ping timer.
         if self._ping_timer:
@@ -2058,7 +2065,10 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
 
         data = bytearray()
         try:
-            data = self._socket.recv(2048)
+            with self._socket_lock:
+                if self._socket is None:
+                    return
+                data = self._socket.recv(2048)
         except (BlockingIOError, ssl.SSLWantReadError, ssl.SSLWantWriteError):
             log.debug('(%s) No data to read, trying again later...', self.name, exc_info=True)
             return
@@ -2102,12 +2112,20 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
 
         while True:
             try:
-                self._socket.send(encoded_data)
+                with self._socket_lock:
+                    if self._socket is None:
+                        break
+                    sent = self._socket.send(encoded_data)
+                # A non-blocking send may only write part of the data: keep the rest for the next round.
+                if sent is not None and sent < len(encoded_data):
+                    encoded_data = encoded_data[sent:]
+                    continue
             except (BlockingIOError, ssl.SSLWantReadError, ssl.SSLWantWriteError):
                 # The send attempt failed, wait a little bit.
                 # I would prefer using a blocking socket and MSG_DONTWAIT in recv()'s flags
                 # but SSLSocket doesn't support that...
-                throttle_time = self.serverdata.get('throttle_time', 0)
+                # Never wait for less than 10ms, otherwise this loop spins a CPU core.
+                throttle_time = max(self.serverdata.get('throttle_time', 0), 0.01)
                 if self._aborted.wait(throttle_time):
                     break
                 continue
@@ -2158,10 +2176,16 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
                 break
 
         # Once we're done here, shut down the write part of the socket.
-        if self._socket:
-            log.debug('(%s) _process_queue: shutting down write half of socket %s', self.name, self._socket)
-            self._socket.shutdown(socket.SHUT_WR)
-        self._aborted_send.set()
+        try:
+            with self._socket_lock:
+                if self._socket:
+                    log.debug('(%s) _process_queue: shutting down write half of socket %s', self.name, self._socket)
+                    self._socket.shutdown(socket.SHUT_WR)
+        except OSError:
+            log.debug('(%s) _process_queue: error while shutting down the write half of the socket:',
+                      self.name, exc_info=True)
+        finally:
+            self._aborted_send.set()
 
     def wrap_message(self, source, target, text):
         """
