@@ -769,6 +769,10 @@ relay:
     # 'relay_server_suffix' option in a server block.
     #server_suffix: "relay.yournet.net"
 
+    # BesiLink addition: description of the relay subservers in /map and /links. "%s" becomes the
+    # remote network's full name (netname). Defaults to "BesiLink relay: %s".
+    #server_desc: "BesiLink relay: %s"
+
     # Sets the default Relay separator. Defaults to / if not specified. The "separator"
     # option in server blocks override this if specified.
     separator: "/"

@@ -17,6 +17,7 @@ import re
 import socket
 import ssl
 import string
+import sys
 import textwrap
 import threading
 import time
@@ -1949,7 +1950,10 @@ class IRCNetwork(PyLinkNetworkCoreWithUtils):
 
         # _run_irc() or the protocol module it called raised an exception, meaning we've disconnected
         except:
-            self._log_connection_error('(%s) Disconnected from IRC:', self.name, exc_info=True)
+            # Fork change: put the reason on the first line too (readable in journalctl)
+            _exc = sys.exc_info()[1]
+            self._log_connection_error('(%s) Disconnected from IRC: %s: %s', self.name,
+                                       type(_exc).__name__, _exc, exc_info=True)
             if not self._aborted.is_set():
                 self.disconnect()
 

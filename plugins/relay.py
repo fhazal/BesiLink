@@ -319,9 +319,14 @@ def spawn_relay_server(irc, remoteirc):
                 old_eob_delay = irc._endburst_delay
                 irc._endburst_delay = irc.serverdata.get('relay_endburst_delay', 10)
 
-            sid = irc.spawn_server('%s.%s' % (remoteirc.name, suffix),
-                                              desc="PyLink Relay network - %s" %
-                                              (remoteirc.get_full_network_name()))
+            # Fork change: BesiLink branding, configurable with relay::server_desc
+            # ("%s" is replaced by the remote network's full name).
+            desc_fmt = conf.conf.get('relay', {}).get('server_desc', 'BesiLink relay: %s')
+            try:
+                desc = desc_fmt % remoteirc.get_full_network_name()
+            except (TypeError, ValueError):
+                desc = str(desc_fmt)
+            sid = irc.spawn_server('%s.%s' % (remoteirc.name, suffix), desc=desc)
 
             # Set _endburst_delay back to its last value.
             if needs_delayed_eob:

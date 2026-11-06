@@ -119,7 +119,8 @@ def _main():
         if os.name == 'nt':
             import ctypes
             ctypes.windll.kernel32.SetConsoleTitleW("BesiLink %s" % __version__)
-        elif os.name == 'posix':
+        elif os.name == 'posix' and sys.stdout.isatty():
+            # Fork change: only on a real terminal, so the escape code doesn't end up in logs/journald
             sys.stdout.write("\x1b]2;BesiLink %s\x07" % __version__)
 
     if not args.no_pid:

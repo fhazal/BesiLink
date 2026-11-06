@@ -1,3 +1,23 @@
+# BesiLink 3.3.0 (2026-11-07)
+
+### Branding
+
+- Relay subservers are described as `BesiLink relay: <network>` in `/map` and `/links`
+  (was "PyLink Relay network - ..."). New option `relay::server_desc` changes it; `%s` becomes the network name.
+- Service clients show the oper type `BesiLink Service`, and the default service realname is `BesiLink Service Client`.
+
+### Fixes
+
+- "Disconnected from IRC" log lines now include the reason (for example a TLS fingerprint mismatch) on the first
+  line, not only in the traceback below it.
+- The terminal title escape code is only written to real terminals, so it no longer appears in logs or journald.
+
+### Tested
+
+- Dry run of an UnrealIRCd 6.2.7 link **without a U-line** (the recommended production setup): relayed users appear
+  on both sides, and Unreal channel operators can kick, ban, voice and set topics on relayed users. Relay users carry
+  no IP on UnrealIRCd (`[]` in server notices) and are not announced on connect, only on exit.
+
 # BesiLink 3.2.1 (2026-11-07)
 
 ### Packaging

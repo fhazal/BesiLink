@@ -28,7 +28,7 @@ conf = {'bot':
                 {
                     'nick': 'PyLink',
                     'user': 'pylink',
-                    'realname': 'PyLink Service Client',
+                    'realname': 'BesiLink Service Client',  # Fork change
                     'serverdesc': 'Unconfigured PyLink'
                 },
         'logging':

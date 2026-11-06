@@ -38,7 +38,7 @@ def spawn_service(irc, source, command, args):
         # so that they can override the main service nick, among other things.
         log.debug('(%s) spawn_service: Using existing nick %r for service %r', irc.name, irc.pseudoclient.nick, name)
         userobj = irc.pseudoclient
-        userobj.opertype = "PyLink Service"
+        userobj.opertype = "BesiLink Service"  # Fork change
         userobj.manipulatable = sbot.manipulatable
     else:
         # No client exists, spawn a new one
@@ -62,7 +62,7 @@ def spawn_service(irc, source, command, args):
 
         # Track the service's UIDs on each network.
         log.debug('(%s) spawn_service: Spawning new client %s for service %s', irc.name, nick, name)
-        userobj = irc.spawn_client(nick, ident, host, modes=modes, opertype="PyLink Service",
+        userobj = irc.spawn_client(nick, ident, host, modes=modes, opertype="BesiLink Service",
                                    realname=realname, manipulatable=sbot.manipulatable)
 
     # Store the service name in the User object for easier access.
