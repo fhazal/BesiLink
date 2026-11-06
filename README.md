@@ -1,160 +1,151 @@
-# BesiLink
+<div align="center">
+
+# 🔗 BajuBesi Labs · BesiLink
+
+**Link IRC networks together, so they feel like one.**<br>
+A maintained fork of PyLink · UnrealIRCd 6 · InspIRCd 4 · real server links · tagged nicks
 
 [![tests](https://github.com/fhazal/BesiLink/actions/workflows/tests.yml/badge.svg)](https://github.com/fhazal/BesiLink/actions/workflows/tests.yml)
-[![release](https://img.shields.io/github/v/release/fhazal/BesiLink)](https://github.com/fhazal/BesiLink/releases)
+[![PyPI](https://img.shields.io/pypi/v/besilink?color=3776ab&logo=pypi&logoColor=white)](https://pypi.org/project/besilink/)
+![Python 3.10–3.13](https://img.shields.io/badge/python-3.10%E2%80%933.13-3776ab?logo=python&logoColor=white)
+[![Release](https://img.shields.io/github/v/release/fhazal/BesiLink?color=8b5cf6)](https://github.com/fhazal/BesiLink/releases)
+[![License: MPL 2.0](https://img.shields.io/badge/license-MPL--2.0-e8b04b)](LICENSE.MPL2)
 
-**BesiLink is a maintained fork of [PyLink](https://github.com/PyLink/PyLink)** (originally by James Lu and contributors),
-kept up by BajuBesi Labs. The original project was archived on 2023-01-04 and is no longer maintained.
+[![Join our Discord](https://img.shields.io/badge/Discord-Join%20BajuBesi-5865f2?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/TCmm8cH3GE)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20us-ff5e5b?logo=ko-fi&logoColor=white&style=for-the-badge)](https://ko-fi.com/bajubesi)
 
-BesiLink keeps PyLink's code, licenses, command name (`pylink`) and import package (`pylinkirc`, published on PyPI as `besilink`), so existing
-configuration files and plugins keep working. What is different so far: a fix for TLS connections on current Python,
-UnrealIRCd 6 prefix handling, and native InspIRCd 4 support (`target_version: insp4`). See [FORK.md](FORK.md) for the
-full list of changes, what has been tested and what has not.
+</div>
 
-- **Install:** `pip install besilink`, or see [docs/besilink-install.md](docs/besilink-install.md) (git, Docker, systemd)
-- **Release notes:** [RELNOTES.md](RELNOTES.md), downloads on the [releases page](https://github.com/fhazal/BesiLink/releases)
-- **Bugs and questions:** [issues](https://github.com/fhazal/BesiLink/issues)
-
-BesiLink is not affiliated with the original PyLink authors. The rest of this file is the original PyLink README.
+> [!NOTE]
+> BesiLink is an unofficial fork of [PyLink](https://github.com/PyLink/PyLink) by James Lu and contributors, which was archived in January 2023. It is kept up by **BajuBesi Labs** and is not affiliated with the original authors. Configs and plugins from PyLink 3.1 keep working.
 
 ---
 
-# PyLink IRC Services (original README)
+## ✨ Features
 
-<!--
-[![Latest stable release](https://img.shields.io/github/v/tag/jlu5/pylink?label=stable&color=1a1)](https://github.com/PyLink/PyLink/tree/master)
-[![PyPI version](https://img.shields.io/pypi/v/pylinkirc.svg?maxAge=2592000)](https://pypi.python.org/pypi/pylinkirc/)
-[![Docker image version](https://img.shields.io/docker/v/jlu5/pylink/latest?label=docker)](https://hub.docker.com/r/jlu5/pylink)
-[![Supported Python versions](https://img.shields.io/badge/python-3.7%20and%20later-50e)](https://www.python.org/downloads/)
--->
+<table>
+<tr>
+<td width="50%" valign="top">
 
-PyLink is an extensible, plugin-based IRC services framework written in Python. It aims to be:
+### 🌉 Real network relay
+Share channels between networks. Remote users show up in the nick list as real users, with WHOIS, modes, kicks, topics and bans relayed both ways.
 
-1) a transparent server-side relayer between IRC networks.
+</td>
+<td width="50%" valign="top">
 
-2) a versatile framework for developing IRC services.
+### 🆕 Modern IRCds
+Links **UnrealIRCd 6** and **InspIRCd 4** (`target_version: insp4`) as real servers, and still supports the IRCds PyLink always did.
 
-PyLink is licensed under the Mozilla Public License, version 2.0 ([LICENSE.MPL2](LICENSE.MPL2)). The [corresponding documentation](docs/) is licensed under the Creative Attribution-ShareAlike 4.0 International License. ([LICENSE.CC-BY-SA-4.0](LICENSE.CC-BY-SA-4.0))
+</td>
+</tr>
+<tr>
+<td valign="top">
 
-## Getting help
+### 🏷️ Tagged nicks
+Pick how remote users look: `Belon[SKT]` and `Bamboo[JVN]` with short tags per network, or the classic `Belon/net`. Reserve the tags so nobody can pretend to be a relayed user.
 
-**First, MAKE SURE you've read the [FAQ](docs/faq.md)!**
+</td>
+<td valign="top">
 
-**When upgrading between major versions, remember to read the [release notes](RELNOTES.md) for any breaking changes!**
+### 🔒 Safe by default
+Fixed TLS on current Python, pinned certificate fingerprints, and no U-line needed, so your channel operators keep full control over relayed users.
 
-Please report bugs in this repository's issue tracker (the original PyLink issue tracker at https://github.com/PyLink/PyLink/issues is archived and read-only). Pull requests are likewise welcome.
+</td>
+</tr>
+<tr>
+<td valign="top">
 
-## Installation
+### 🗺️ Map and uptime for opers
+`/msg BesiLink map` shows every linked network in one tree; `uptime` and `/STATS u` show how long each link has been up.
 
-### Pre-requisites
-* Python 3.7 or above - prefer the newest Python 3.x when available
-* A Unix-like operating system: PyLink is actively developed on Linux only, so we cannot guarantee that things will work properly on other systems.
+</td>
+<td valign="top">
 
-If you are a developer and want to help make PyLink more portable, patches are welcome.
+### 📦 Easy to run
+`pip install besilink`, a systemd unit or Docker. Upgrading from PyLink 3.1 is a drop-in swap: same command, same config.
 
-### Installing from source
+</td>
+</tr>
+</table>
 
-1) First, make sure the following dependencies are met:
+---
 
-    * Setuptools (`pip3 install setuptools`)
-    * PyYAML (`pip3 install pyyaml`)
-    * cachetools (`pip3 install cachetools`)
-    * *For hashed password support*: Passlib >= 1.7.0 (`pip3 install passlib`)
-    * *For Unicode support in Relay*: unidecode (`pip3 install Unidecode`)
-    * *For extended PID file tracking (i.e. removing stale PID files after a crash)*: psutil (`pip3 install psutil`)
+## 👀 What it looks like
 
-2) Clone the repository: `git clone https://github.com/PyLink/PyLink && cd PyLink`
-    - Previously there was a *devel* branch for testing versions of PyLink - this practice has since been discontinued.
+The same channel on two networks, linked by BesiLink:
 
-3) Install PyLink using `python3 setup.py install` (global install) or `python3 setup.py install --user` (local install)
-    * Note: `--user` is a *literal* string; *do not* replace it with your username.
-    *  **Whenever you switch branches or update PyLink's sources via `git pull`, you will need to re-run this command for changes to apply!**
+```
+#chat on UnrealIRCd                    #chat on InspIRCd
+──────────────────────                 ──────────────────────
+@Alice                                 @Carol
+ Bob                                    Dave
+@Carol[JVN]    ← from InspIRCd          @Alice[SKT]   ← from UnrealIRCd
+ Dave[JVN]                               Bob[SKT]
 
-### Installing via Docker
-
-As of PyLink 3.0 there is a Docker image available on Docker Hub: [jlu5/pylink](https://hub.docker.com/r/jlu5/pylink)
-
-It supports the following tags:
-
-- Rolling tags: **`latest`** (latest stable/RC release), **`latest-beta`** (latest beta snapshot)
-- Pinned to a major branch: e.g. **`3`** (latest 3.x stable release), **`3-beta`** (latest 3.x beta snapshot)
-- Pinned to a specific version: e.g. **`3.0.0`**
-
-To use this image you should mount your configuration/DB folder into `/pylink`. **Make sure this directory is writable by UID 10000.**
-
-```bash
-$ docker run -v $HOME/pylink:/pylink jlu5/pylink
+<Carol[JVN]> hello from the other side    <Alice[SKT]> hi Carol!
 ```
 
-### Installing via PyPI (stable branch only)
+---
 
-1) Make sure you're running the right pip command: on most distros, pip for Python 3 uses the command `pip3`.
+## 🚀 Quick start
 
-2) Run `pip3 install pylinkirc` to download and install PyLink. pip will automatically resolve dependencies.
+```bash
+python3 -m venv ~/venv
+~/venv/bin/pip install besilink
+curl -o pylink.yml https://raw.githubusercontent.com/fhazal/BesiLink/main/example-conf.yml
+~/venv/bin/pylink pylink.yml
+```
 
-3) Download or copy https://github.com/PyLink/PyLink/blob/master/example-conf.yml for an example configuration.
+Then follow the **[install guide](docs/besilink-install.md)**: configuration, systemd, Docker, relaying a channel and the [tested UnrealIRCd 6 + InspIRCd 4 setup](docs/besilink-install.md#5-tested-setup-unrealircd-6--inspircd-4-as-real-server-links).
 
-## Configuration
+> [!TIP]
+> Coming from PyLink? Run `pip uninstall pylinkirc` first, then `pip install besilink`. Your `pylink.yml` and relay database stay as they are.
 
-1) Rename `example-conf.yml` to `pylink.yml` (or a similarly named `.yml` file) and configure your instance there.
+---
 
-2) Run `pylink` from the command line. PyLink will load its configuration from `pylink.yml` by default, but you can override this by running `pylink` with a config argument (e.g. `pylink mynet.yml`).
+## 🧭 Supported IRCds
 
-## Supported IRCds
+| IRCd | Module | Status |
+| --- | --- | --- |
+| **UnrealIRCd 6.x** | `unreal` | ✅ Tested on a live network |
+| **InspIRCd 4.x** | `inspircd` + `target_version: insp4` | ✅ Tested on a live network |
+| InspIRCd 2.0 / 3.x | `inspircd` (`insp20` / `insp3`) | ✅ InspIRCd 3 tested live, 2.0 inherited |
+| UnrealIRCd 4.2 / 5.0 | `unreal` | 🧪 Covered by the test suite |
+| charybdis, ChatIRCd, juno, ratbox, Elemental | `ts6` | 🧪 Covered by the test suite |
+| Nefarious, IRCu, snircd, beware | `p10` | 🧪 Covered by the test suite |
+| IRCd-Hybrid, ngIRCd | `hybrid`, `ngircd` | 📦 Inherited from PyLink |
+| Any other IRCd, as a bot | `clientbot` | ✅ Tested live (relay leaf only) |
 
-### Primary support
+<details>
+<summary><b>Notes per IRCd from the original PyLink docs</b></summary>
 
-These IRCds (in alphabetical order) are frequently tested and well supported. If any issues occur, please file a bug on the issue tracker.
+The detailed per-IRCd notes (KLINE `shared{}` blocks, ngIRCd settings, P10 host hiding and so on) are unchanged and live in the [original PyLink README](docs/pylink-original-readme.md#supported-ircds).
 
-* [InspIRCd](http://www.inspircd.org/) (2.0 - 3.x) - module `inspircd`
-    - Set the `target_version` option to `insp3` to target InspIRCd 3.x (default), or `insp20` to target InspIRCd 2.0 (legacy).
-    - For vHost setting to work, `m_chghost.so` must be loaded. For ident and realname changing support, `m_chgident.so` and `m_chgname.so` must be loaded respectively.
-    - Supported channel, user, and prefix modes are negotiated on connect, but hotloading modules that change these is not supported. After changing module configuration, it is recommended to SQUIT PyLink to force a protocol renegotiation.
-* [Nefarious IRCu](https://github.com/evilnet/nefarious2) (2.0.0+) - module `p10`
-    - Note: Both account cloaks (user and oper) and hashed IP cloaks are optionally supported (`HOST_HIDING_STYLE` settings 0 to 3). Make sure you configure PyLink to match your IRCd settings.
-* [UnrealIRCd](https://www.unrealircd.org/) (4.2.x - 5.0.x) - module `unreal`
-    - Supported channel, user, and prefix modes are negotiated on connect, but hotloading modules that change these is not supported. After changing module configuration, it is recommended to SQUIT PyLink to force a protocol renegotiation.
+</details>
 
-### Extended support
+---
 
-Support for these IRCds exist, but are not tested as frequently and thoroughly. Bugs should be filed if there are any issues, though they may not always be fixed in a timely fashion.
+## 📚 Documentation
 
-* [charybdis](https://github.com/charybdis-ircd/charybdis) (3.5+) - module `ts6`
-    - For KLINE support to work, a `shared{}` block should be added for PyLink on all servers.
-* [ChatIRCd](http://www.chatlounge.net/software) (1.2.x / git master) - module `ts6`
-    - For KLINE support to work, a `shared{}` block should be added for PyLink on all servers.
-* [juno-ircd](https://github.com/cooper/juno) (13.x / ava) - module `ts6` (see [configuration example](https://github.com/cooper/juno/blob/master/doc/ts6.md#pylink))
-* [ngIRCd](https://ngircd.barton.de/) (24+) - module `ngircd`
-    - For GLINEs to propagate, the `AllowRemoteOper` option must be enabled in ngIRCd.
-    - `+` (modeless) channels are not supported, and should be disabled for PyLink to function correctly.
-    - For use with Relay, the `CloakHostModeX` setting will work fine but `CloakHost` and `CloakUserToNick` are *not* supported.
+| Guide | What's inside |
+| --- | --- |
+| [Install guide](docs/besilink-install.md) | Install, configure, run as a service, relay a channel, upgrade |
+| [Relay quick start](docs/relay-quickstart.md) | Relay commands, CLAIM, LINKACL, services compatibility |
+| [Advanced relay config](docs/advanced-relay-config.md) | IP sharing, nick and server options, more relay settings |
+| [Permissions reference](docs/permissions-reference.md) | Every permission node for `permissions:` |
+| [FORK.md](FORK.md) · [RELNOTES.md](RELNOTES.md) | What BesiLink changed, what was tested, release notes |
 
-### Legacy extended support
+---
 
-Support for these IRCds was added at some point but is no longer actively maintained, either due to inactive upstream development or a perceived lack of interest. We recommend migrating to an IRCd in the above two sections.
+## 🙏 Credits
 
-* [beware-ircd](http://ircd.bircd.org/) (1.6.3) - module `p10`
-    - Because bircd disallows BURST after ENDBURST for regular servers, U-lines are required for all PyLink servers. Fortunately, wildcards are supported in U-lines, so you can add something along the lines of `U:<your pylink server>:` and `U:*.relay:` (adjust accordingly for your relay server suffix).
-    - Use `ircd: snircd` as the target IRCd.
-    - Halfops, `sethost` (`+h`), and account-based cloaking (`VHostStyle=1`) are supported. Crypted IPs and static hosts (`VHostStyle` 2 and 3) are NOT.
-* [Elemental-IRCd](https://github.com/Elemental-IRCd/elemental-ircd) (6.6.x / git master) - module `ts6`
-    - For KLINE support to work, a `shared{}` block should be added for PyLink on all servers.
-* [IRCd-Hybrid](http://www.ircd-hybrid.org/) (8.2.x / svn trunk) - module `hybrid`
-    - For host changing support and optimal functionality, a `service{}` block / U-line should be added for PyLink on every IRCd across your network.
-    - For KLINE support to work, a `shared{}` block should also be added for PyLink on all servers.
-* [ircd-ratbox](http://www.ratbox.org/) (3.x) - module `ts6`
-    - Host changing is not supported.
-    - On ircd-ratbox, all known IPs of users will be shown in `/whois`, even if the client is e.g. a cloaked relay client. If you're paranoid about this, turn off Relay IP forwarding on the ratbox network(s).
-    - For KLINE support to work, a `shared{}` block should be added for PyLink on all servers.
-* [IRCu](http://coder-com.undernet.org/) (u2.10.12.16+) - module `p10`
-    - Host changing (changehost, relay) is not supported.
-* [snircd](https://development.quakenet.org/) (1.3.x+) - module `p10`
-    - Outbound host changing (i.e. for the `changehost` plugin) is not supported.
+- **[PyLink](https://github.com/PyLink/PyLink)** by James Lu (jlu5) and contributors, the project BesiLink is built on.
+- Made and maintained by **BajuBesi Labs**. Not affiliated with the PyLink authors, UnrealIRCd or InspIRCd.
+- Code under the [Mozilla Public License 2.0](LICENSE.MPL2), documentation under [CC BY-SA 4.0](LICENSE.CC-BY-SA-4.0), the same licences as PyLink.
+- Found a bug? Please open an [issue](https://github.com/fhazal/BesiLink/issues).
 
-### Clientbot
+<div align="center">
 
-PyLink supports connecting to IRCds as a relay bot and forwarding users back as virtual clients, similar to Janus' Clientbot. This can be useful if the IRCd a network used isn't supported, or if you want to relay certain channels without fully linking with a network.
+<sub>Made with ☕ by <b>BajuBesi Labs</b></sub>
 
-For Relay to work properly with Clientbot, be sure to load the `relay_clientbot` plugin in conjunction with `relay`.
-
-Note: **Clientbot links can only be used as a leaf for Relay links - they CANNOT be used to host channels!** This means that Relay does not support having all your networks be Clientbot - in those cases you are better off using a classic relay bot, like [RelayNext for Limnoria](https://github.com/jlu5/SupyPlugins/tree/master/RelayNext).
+</div>
