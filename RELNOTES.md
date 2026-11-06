@@ -20,7 +20,7 @@ in place. See [FORK.md](FORK.md) for what was tested.
 ### Internal improvements
 
 - New tests for UnrealIRCd `PREFIX` handling and InspIRCd 4 `UID` / `SERVER` parsing.
-- GitHub Actions CI runs the test suite on Python 3.9 to 3.13.
+- GitHub Actions CI runs the test suite on Python 3.10 to 3.13.
 - New install guide: [docs/besilink-install.md](docs/besilink-install.md).
 
 # PyLink 3.1.0 (2023-01-03)

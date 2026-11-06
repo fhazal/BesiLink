@@ -5,7 +5,7 @@ This guide gets a BesiLink relay running on a Linux server. BesiLink uses the sa
 
 ## Requirements
 
-- Python 3.9 or newer (tested on 3.9 to 3.13)
+- Python 3.10 or newer (tested on 3.10 to 3.13)
 - An IRC network you can link to as a server (UnrealIRCd 6, InspIRCd 3 or 4, and the other IRCds listed in the
   README), **or** a plain client connection for Clientbot mode
 
