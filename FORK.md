@@ -27,10 +27,17 @@ Changed files carry their original headers. Changes made in this fork are marked
   translation, oper status, CHGHOST, CHGIDENT and CHGNAME in both directions.
 - TLS Clientbot connections: 0 of 5 starts failed with the fix, against 4 of 5 without it.
 - `python -m unittest` for the protocol and utility test modules.
+- Burst: 120 users on UnrealIRCd 6.2.7 and 120 on InspIRCd 4.12.1 joining one relayed channel within seconds:
+  every user appears on both sides, no errors.
+- Ban lists: 60 bans set on UnrealIRCd are mirrored on InspIRCd and removed again correctly.
+- Split and relink: stopping either server makes PyLink reconnect on its own after the autoconnect delay, the channel
+  membership is rebuilt on both sides and messages flow both ways again.
+- UnrealIRCd 6 only: its own channel flood protection can set `+b ~time:10:~security-group:unknown-users`.
+  PyLink does not copy that Unreal-specific ban to servers that cannot represent it (this is intended).
 
 ## Not tested yet
 
-SASL and services accounts, Anope, very large bursts, and netsplit / relink behaviour.
+SASL and services accounts, Anope, bursts far beyond a few hundred users, and more than two networks at once.
 
 ## Requirements and use
 
