@@ -16,10 +16,10 @@ __all__ = ['InspIRCdProtocol']
 class InspIRCdProtocol(TS6BaseProtocol):
 
     S2S_BUFSIZE = 0  # InspIRCd allows infinitely long S2S messages, so set bufsize to infinite
-    SUPPORTED_IRCDS = ['insp20', 'insp3']
+    SUPPORTED_IRCDS = ['insp20', 'insp3', 'insp4']
     DEFAULT_IRCD = SUPPORTED_IRCDS[1]
 
-    MAX_PROTO_VER = 1205  # anything above this warns (not officially supported)
+    MAX_PROTO_VER = 1206  # anything above this warns (not officially supported)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,6 +42,10 @@ class InspIRCdProtocol(TS6BaseProtocol):
             self.proto_ver = 1202
         elif ircd_target == 'insp3':
             self.proto_ver = 1205
+        elif ircd_target == 'insp4':
+            # Fork addition: native InspIRCd 4 protocol. InspIRCd 4 still accepts 1205 through a
+            # compatibility layer, so 'insp3' keeps working against it; 'insp4' speaks 1206.
+            self.proto_ver = 1206
         else:
             raise ProtocolError("Unsupported target_version %r: supported values include %s" % (ircd_target, self.SUPPORTED_IRCDS))
         log.debug('(%s) inspircd: using protocol version %s for target_version %r', self.name, self.proto_ver, ircd_target)
@@ -85,8 +89,15 @@ class InspIRCdProtocol(TS6BaseProtocol):
         self.apply_modes(uid, modes)
         self.servers[server].users.add(uid)
 
-        self._send_with_prefix(server, "UID {uid} {ts} {nick} {realhost} {host} {ident} {ip}"
-                               " {ts} {modes} + :{realname}".format(ts=ts, host=host,
+        if self.proto_ver >= 1206:
+            # 1206 sends both the real and the displayed username:
+            # UID uuid ts nick real-host displayed-host real-user displayed-user ip signon modes :real
+            uid_line = ("UID {uid} {ts} {nick} {realhost} {host} {ident} {ident} {ip}"
+                        " {ts} {modes} + :{realname}")
+        else:
+            uid_line = ("UID {uid} {ts} {nick} {realhost} {host} {ident} {ip}"
+                        " {ts} {modes} + :{realname}")
+        self._send_with_prefix(server, uid_line.format(ts=ts, host=host,
                                nick=nick, ident=ident, uid=uid,
                                modes=raw_modes, ip=ip, realname=realname,
                                realhost=realhost))
@@ -296,10 +307,19 @@ class InspIRCdProtocol(TS6BaseProtocol):
             # It is one of our clients, use FIDENT/HOST/NAME.
             if field == 'IDENT':
                 self.users[target].ident = text
-                self._send_with_prefix(target, 'FIDENT %s' % text)
+                if self.proto_ver >= 1206:
+                    # 1206 FIDENT takes the displayed and the real username; InspIRCd 4.12 rejects one parameter.
+                    self._send_with_prefix(target, 'FIDENT %s %s' % (text, text))
+                else:
+                    self._send_with_prefix(target, 'FIDENT %s' % text)
             elif field == 'HOST':
                 self.users[target].host = text
-                self._send_with_prefix(target, 'FHOST %s' % text)
+                if self.proto_ver >= 1206:
+                    # 1206 FHOST takes two parameters: the displayed host and the real host.
+                    # (One parameter is rejected with "Protocol violation: Insufficient parameters".)
+                    self._send_with_prefix(target, 'FHOST %s %s' % (text, self.users[target].realhost or text))
+                else:
+                    self._send_with_prefix(target, 'FHOST %s' % text)
             elif field in ('REALNAME', 'GECOS'):
                 self.users[target].realname = text
                 self._send_with_prefix(target, 'FNAME :%s' % text)
@@ -467,9 +487,14 @@ class InspIRCdProtocol(TS6BaseProtocol):
         f('CAPAB END')
 
         host = self.serverdata["hostname"]
-        f('SERVER {host} {Pass} 0 {sid} :{sdesc}'.format(host=host,
-          Pass=self.serverdata["sendpass"], sid=self.sid,
-          sdesc=self.serverdata.get('serverdesc') or conf.conf['pylink']['serverdesc']))
+        sdesc = self.serverdata.get('serverdesc') or conf.conf['pylink']['serverdesc']
+        if self.proto_ver >= 1206:
+            # 1206 removed the unused "hops" field from SERVER.
+            f('SERVER {host} {Pass} {sid} :{sdesc}'.format(host=host, Pass=self.serverdata["sendpass"],
+              sid=self.sid, sdesc=sdesc))
+        else:
+            f('SERVER {host} {Pass} 0 {sid} :{sdesc}'.format(host=host, Pass=self.serverdata["sendpass"],
+              sid=self.sid, sdesc=sdesc))
 
         self._send_with_prefix(self.sid, 'BURST %s' % ts)
 
@@ -769,7 +794,13 @@ class InspIRCdProtocol(TS6BaseProtocol):
     def handle_uid(self, numeric, command, args):
         """Handles incoming UID commands (user introduction)."""
         # :70M UID 70MAAAAAB 1429934638 jlu5 0::1 hidden-7j810p.9mdf.lrek.0000.0000.IP jlu5 0::1 1429934638 +Wioswx +ACGKNOQXacfgklnoqvx :realname
-        uid, ts, nick, realhost, host, ident, ip = args[0:7]
+        if self.remote_proto_ver >= 1206:
+            # 1206: :0S4 UID 0S4AAAAAA 1793978205 nick real-host host real-user user ip signon +modes +params :realname
+            uid, ts, nick, realhost, host, realident, ident, ip = args[0:8]
+            modeindex = 9
+        else:
+            uid, ts, nick, realhost, host, ident, ip = args[0:7]
+            modeindex = 8
 
         ts = int(ts)
 
@@ -777,7 +808,7 @@ class InspIRCdProtocol(TS6BaseProtocol):
         realname = args[-1]
         self.users[uid] = userobj = User(self, nick, ts, uid, numeric, ident, host, realname, realhost, ip)
 
-        parsedmodes = self.parse_modes(uid, [args[8], args[9]])
+        parsedmodes = self.parse_modes(uid, [args[modeindex], args[modeindex + 1]])
         self.apply_modes(uid, parsedmodes)
 
         self._check_oper_status_change(uid, parsedmodes)
@@ -792,7 +823,8 @@ class InspIRCdProtocol(TS6BaseProtocol):
         if self.uplink is None:
             # <- SERVER whatever.net abcdefgh 0 10X :some server description
             servername = args[0].lower()
-            source = args[3]
+            # 1206+: <- SERVER whatever.net abcdefgh 10X :some server description (no hops field)
+            source = args[2] if self.remote_proto_ver >= 1206 and len(args) == 4 else args[3]
 
             if args[1] != self.serverdata['recvpass']:
                  # Check if recvpass is correct
