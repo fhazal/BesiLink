@@ -289,6 +289,15 @@ servers:
         # option on a per network-basis.
         #relay_tag_nicks: true
 
+        # BesiLink addition: short tag for users FROM this network when relay::tag_style is
+        # "brackets", e.g. "SKT" makes Belon appear as Belon[SKT] on the other networks. Letters,
+        # digits, - and _ only. Defaults to the network's short name.
+        #relay_nick_tag: "SKT"
+
+        # BesiLink addition: per-network override of relay::tag_style for relay users shown on THIS
+        # network ("separator" or "brackets").
+        #relay_tag_style: brackets
+
         # Determines the maximum size of the network's outgoing data queue (sendq), in message lines.
         # This defaults to 4096 if not set.
         #maxsendq: 4096
@@ -776,6 +785,15 @@ relay:
     # Sets the default Relay separator. Defaults to / if not specified. The "separator"
     # option in server blocks override this if specified.
     separator: "/"
+
+    # BesiLink addition: how relay nicks are tagged.
+    #  "separator" (default): nick + separator + network short name, e.g. Belon/skinternet
+    #  "brackets": nick + [tag], e.g. Belon[SKT], with the tag from servers::<net>::relay_nick_tag.
+    #              Nick conflicts become Belon_[SKT], Belon__[SKT], ...
+    # Bracket nicks are valid for normal users too, so reserve the tags for local users on every
+    # network (UnrealIRCd: ban nick { mask "*[SKT]"; ... }, InspIRCd: <badnick nick="*[SKT]" ...>).
+    # Servers are not affected by those blocks, so BesiLink can still introduce relay users.
+    #tag_style: brackets
 
     # This option defines lists of networks to relay user IPs between (instead of
     # masking them as 0.0.0.0). If a network is in a pool (case-SENSITIVE), their

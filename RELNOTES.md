@@ -1,3 +1,18 @@
+# BesiLink 3.4.0 (2026-11-07)
+
+### Feature changes
+
+- relay: **bracket nick tags**. With `relay::tag_style: brackets` (or `relay_tag_style` per network) relay users
+  appear as `Belon[SKT]` instead of `Belon/skinternet`. The tag is set per origin network with `relay_nick_tag`
+  (falls back to the network's short name). Nick conflicts become `Belon_[SKT]`, `Belon__[SKT]`, ...; long nicks
+  are cut before the tag. The default stays the classic `nick/net` style.
+- Bracket nicks can also be used by normal users, so reserve the tags for local users on each network (see the
+  comments in `example-conf.yml`). Those blocks do not apply to servers, so BesiLink can still introduce relay users.
+
+### Internal improvements
+
+- New tests for relay nick tagging (`test/test_relay_nicks.py`).
+
 # BesiLink 3.3.0 (2026-11-07)
 
 ### Branding

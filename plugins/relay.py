@@ -160,6 +160,17 @@ def normalize_nick(irc, netname, nick, times_tagged=0, uid=''):
     if irc.has_cap('freeform-nicks'):  # ☺
         return nick
 
+    # Fork addition: bracket tags such as "Belon[SKT]". The tag comes from the ORIGIN network's
+    # servers::<net>::relay_nick_tag (falls back to its short name), and the style from
+    # servers::<target>::relay_tag_style or relay::tag_style ("separator" = classic nick/net).
+    tag_style = str(irc.serverdata.get('relay_tag_style') or
+                    conf.conf.get('relay', {}).get('tag_style') or 'separator').lower()
+    nick_tag = None
+    if tag_style == 'brackets':
+        origin = world.networkobjects.get(netname)
+        nick_tag = origin.serverdata.get('relay_nick_tag') if origin is not None else None
+        nick_tag = ''.join(c for c in str(nick_tag or netname) if c.isalnum() or c in '-_') or 'relay'
+
     is_unicode_capable = irc.casemapping in ('utf8', 'utf-8', 'rfc7700')
     if USE_UNIDECODE and not is_unicode_capable:
         decoded_nick = unidecode.unidecode(nick).strip()
@@ -238,7 +249,11 @@ def normalize_nick(irc, netname, nick, times_tagged=0, uid=''):
     # If this is 1, a /network tag is added. Otherwise, keep adding one character to the
     # separator: jlu5 -> jlu5/net1 -> jlu5//net1 -> ...
     if times_tagged >= 1:
-        suffix = "%s%s%s" % (separator[0]*times_tagged, separator[1:], netname)
+        if nick_tag is not None:
+            # Fork addition: Belon[SKT] -> Belon_[SKT] -> Belon__[SKT] ... on nick conflicts
+            suffix = "%s[%s]" % ('_' * (times_tagged - 1), nick_tag)
+        else:
+            suffix = "%s%s%s" % (separator[0]*times_tagged, separator[1:], netname)
         allowedlength -= len(suffix)
 
     # If a nick is too long, the real nick portion will be cut off, but the
