@@ -614,10 +614,19 @@ class UnrealProtocol(TS6BaseProtocol):
                 for namedmode, modechar in self._KNOWN_UMODES.items():
                     if modechar in supported_umodes:
                         self.umodes[namedmode] = modechar
+            elif cap.startswith('PREFIX='):
+                # Fork change: use the prefix modes the uplink really has, e.g. "(qaohv)~&@%+" on a
+                # default UnrealIRCd or "(ov)@+" when chanmodes/chanowner, chanadmin and halfop are
+                # blacklisted. Previously q/a/h were always assumed to exist.
+                match = re.match(r'^\(([A-Za-z]+)\)(\S+)$', cap.split('=', 1)[1])
+                if match and len(match.group(1)) == len(match.group(2)):
+                    self.prefixmodes = dict(zip(match.group(1), match.group(2)))
+                    log.debug('(%s) handle_protoctl: prefix modes set to %s', self.name, self.prefixmodes)
 
-        # Add in the supported prefix modes.
-        self.cmodes.update({'halfop': 'h', 'admin': 'a', 'owner': 'q',
-                            'op': 'o', 'voice': 'v'})
+        # Add in the supported prefix modes (only those the uplink actually has).
+        for modechar, modename in (('q', 'owner'), ('a', 'admin'), ('o', 'op'), ('h', 'halfop'), ('v', 'voice')):
+            if modechar in self.prefixmodes:
+                self.cmodes[modename] = modechar
 
     def handle_join(self, numeric, command, args):
         """Handles the UnrealIRCd JOIN command."""
