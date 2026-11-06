@@ -1,8 +1,11 @@
-# PyLink fork notice
+# BesiLink: fork notice
 
-This is an unofficial fork of [PyLink](https://github.com/PyLink/PyLink) by James Lu (jlu5) and contributors.
-The upstream project was archived on 2023-01-04 and is no longer maintained. This fork starts from upstream
-commit `43e41cd` ("PyLink 3.1.0") and keeps its licenses unchanged:
+BesiLink is an unofficial, maintained fork of [PyLink](https://github.com/PyLink/PyLink) by James Lu (jlu5) and
+contributors. The upstream project was archived on 2023-01-04 and is no longer maintained. BesiLink starts from upstream
+commit `43e41cd` ("PyLink 3.1.0") and keeps its licenses unchanged. The command name (`pylink`) and the Python package
+name (`pylinkirc`) are also unchanged, so existing configuration files and plugins keep working.
+
+Licenses:
 
 - code: Mozilla Public License 2.0 (`LICENSE.MPL2`)
 - documentation: CC BY-SA 4.0 (`LICENSE.CC-BY-SA-4.0`)

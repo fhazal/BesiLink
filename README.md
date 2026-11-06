@@ -1,6 +1,18 @@
-# PyLink IRC Services
+# BesiLink
 
-## END OF LIFE NOTICE: This project is no longer maintained. So long and thanks for all the fish.
+**BesiLink is a maintained fork of [PyLink](https://github.com/PyLink/PyLink)** (originally by James Lu and contributors),
+kept up by BajuBesi Labs. The original project was archived on 2023-01-04 and is no longer maintained.
+
+BesiLink keeps PyLink's code, licenses, command name (`pylink`) and Python package name (`pylinkirc`), so existing
+configuration files and plugins keep working. What is different so far: a fix for TLS connections on current Python,
+UnrealIRCd 6 prefix handling, and native InspIRCd 4 support (`target_version: insp4`). See [FORK.md](FORK.md) for the
+full list of changes, what has been tested and what has not.
+
+BesiLink is not affiliated with the original PyLink authors. The rest of this file is the original PyLink README.
+
+---
+
+# PyLink IRC Services (original README)
 
 <!--
 [![Latest stable release](https://img.shields.io/github/v/tag/jlu5/pylink?label=stable&color=1a1)](https://github.com/PyLink/PyLink/tree/master)
@@ -23,7 +35,7 @@ PyLink is licensed under the Mozilla Public License, version 2.0 ([LICENSE.MPL2]
 
 **When upgrading between major versions, remember to read the [release notes](RELNOTES.md) for any breaking changes!**
 
-Please report any bugs you find to the [issue tracker](https://github.com/PyLink/PyLink/issues). Pull requests are likewise welcome.
+Please report bugs in this repository's issue tracker (the original PyLink issue tracker at https://github.com/PyLink/PyLink/issues is archived and read-only). Pull requests are likewise welcome.
 
 ## Installation
 
