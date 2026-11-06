@@ -37,10 +37,10 @@ jobs:
         run: docker build -t besilink:ci .
       - name: Smoke test
         run: |
-          out=$(docker run --rm besilink:ci pylink -v)
+          out=$(timeout 60 docker run --rm besilink:ci pylink -v)
           echo "$out"
           echo "$out" | grep -q "^BesiLink $(cat VERSION)"
-          docker run --rm besilink:ci python -c "import pylinkirc.protocols.inspircd, pylinkirc.protocols.unreal, pylinkirc.plugins.relay"
+          timeout 60 docker run --rm besilink:ci python -c "import pylinkirc.launcher, pylinkirc.classes, pylinkirc.protocols.inspircd, pylinkirc.protocols.unreal, pylinkirc.protocols.clientbot"
 
   package:
     runs-on: ubuntu-latest
