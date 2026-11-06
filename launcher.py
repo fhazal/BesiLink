@@ -89,7 +89,7 @@ def _main():
 
         world._should_remove_pid = True
 
-    log.info('PyLink %s starting...', __version__)
+    log.info('BesiLink %s (PyLink fork) starting...', __version__)  # Fork change
 
     world.daemon = args.daemonize
     if args.daemonize:
@@ -118,9 +118,9 @@ def _main():
         #     https://stackoverflow.com/questions/7387276/
         if os.name == 'nt':
             import ctypes
-            ctypes.windll.kernel32.SetConsoleTitleW("PyLink %s" % __version__)
+            ctypes.windll.kernel32.SetConsoleTitleW("BesiLink %s" % __version__)
         elif os.name == 'posix':
-            sys.stdout.write("\x1b]2;PyLink %s\x07" % __version__)
+            sys.stdout.write("\x1b]2;BesiLink %s\x07" % __version__)
 
     if not args.no_pid:
         # Write the PID file only after forking.
@@ -185,7 +185,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:  # Display version and exit
-        print('PyLink %s (in VCS: %s)' % (__version__, real_version))
+        print('BesiLink %s, a PyLink fork (in VCS: %s)' % (__version__, real_version))  # Fork change
         sys.exit()
 
     # XXX: repetitive

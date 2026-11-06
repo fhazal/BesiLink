@@ -261,7 +261,8 @@ def version(irc, source, args):
 
     Returns the version of the currently running PyLink instance."""
     py_version = utils.NORMALIZEWHITESPACE_RE.sub(' ', sys.version)
-    irc.reply("PyLink version \x02%s\x02 (in VCS: %s), running on Python %s." % (__version__, real_version, py_version))
+    # Fork change: identify as BesiLink
+    irc.reply("BesiLink (PyLink fork) version \x02%s\x02 (in VCS: %s), running on Python %s." % (__version__, real_version, py_version))
     irc.reply("The source of this program is available at \x02%s\x02." % world.source)
 
 @utils.add_cmd

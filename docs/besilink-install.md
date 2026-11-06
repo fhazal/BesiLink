@@ -1,7 +1,8 @@
 # Installing BesiLink
 
-This guide gets a BesiLink relay running on a Linux server. BesiLink uses the same command (`pylink`), package
-(`pylinkirc`) and configuration format as PyLink 3.1, so the rest of the [docs](README.md) still apply.
+This guide gets a BesiLink relay running on a Linux server. BesiLink uses the same command (`pylink`), import package
+(`pylinkirc`) and configuration format as PyLink 3.1, so the rest of the [docs](README.md) still apply. On PyPI it is
+published as **`besilink`**.
 
 ## Requirements
 
@@ -11,19 +12,36 @@ This guide gets a BesiLink relay running on a Linux server. BesiLink uses the sa
 
 ## 1. Install
 
-Run BesiLink as its own unprivileged user, in a virtual environment:
+Run BesiLink as its own unprivileged user, in a virtual environment. From PyPI:
 
 ```bash
 sudo useradd -m -s /bin/bash pylink
 sudo -u pylink -i
-git clone https://github.com/fhazal/BesiLink.git
 python3 -m venv ~/venv
-~/venv/bin/pip install ./BesiLink
-mkdir ~/run && cp BesiLink/example-conf.yml ~/run/pylink.yml
+~/venv/bin/pip install besilink
+mkdir ~/run && curl -o ~/run/pylink.yml https://raw.githubusercontent.com/fhazal/BesiLink/main/example-conf.yml
 ```
 
-To pin a release, use `git clone --branch v3.2.0 ...`. Optional extras: `pip install "./BesiLink[password-hashing]"`
-(hashed admin passwords, see `pylink-mkpasswd`) and `"./BesiLink[relay-unicode]"` (transliterates Unicode nicks).
+Or from git (to run unreleased code, or pin a tag with `git clone --branch v3.2.1 ...`):
+
+```bash
+git clone https://github.com/fhazal/BesiLink.git
+~/venv/bin/pip install ./BesiLink
+```
+
+Optional extras: `pip install "besilink[password-hashing]"` (hashed admin passwords, see `pylink-mkpasswd`) and
+`"besilink[relay-unicode]"` (transliterates Unicode nicks).
+
+### Docker
+
+```bash
+git clone https://github.com/fhazal/BesiLink.git && cd BesiLink
+docker build -t besilink .
+docker run -d --name besilink --restart unless-stopped -v /srv/besilink:/pylink besilink
+```
+
+`/srv/besilink` holds `pylink.yml` and the relay database. The container runs as UID 10000, so give that UID write
+access to the folder.
 
 ## 2. Configure
 
@@ -129,15 +147,22 @@ Anope or Atheme) and for handling disputes.
 ## Upgrading
 
 ```bash
-sudo -u pylink -i
-cd BesiLink && git pull   # or: git fetch --tags && git checkout v<new version>
-~/venv/bin/pip install --force-reinstall --no-deps .
-exit
+sudo -u pylink /home/pylink/venv/bin/pip install --upgrade besilink
+# from git instead: cd BesiLink && git pull && ~/venv/bin/pip install --force-reinstall --no-deps .
 sudo systemctl restart pylink
 ```
 
-Back up `pylink.yml` and `pylinkrelay.db` first. To upgrade from upstream PyLink 3.1, install BesiLink into the
-existing venv the same way. The config and relay database stay compatible.
+Back up `pylink.yml` and `pylinkrelay.db` first.
+
+**Coming from upstream PyLink (`pylinkirc` on PyPI) or BesiLink 3.2.0:** both installed under the PyPI name
+`pylinkirc`. Remove it first, because both names install the same files:
+
+```bash
+sudo -u pylink /home/pylink/venv/bin/pip uninstall -y pylinkirc
+sudo -u pylink /home/pylink/venv/bin/pip install besilink
+```
+
+The config and relay database stay compatible.
 
 ## Reporting problems
 

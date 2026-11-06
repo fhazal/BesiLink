@@ -2,7 +2,7 @@
 
 BesiLink is an unofficial, maintained fork of [PyLink](https://github.com/PyLink/PyLink) by James Lu (jlu5) and
 contributors. The upstream project was archived on 2023-01-04 and is no longer maintained. BesiLink starts from upstream
-commit `43e41cd` ("PyLink 3.1.0") and keeps its licenses unchanged. The command name (`pylink`) and the Python package
+commit `43e41cd` ("PyLink 3.1.0") and keeps its licenses unchanged. The command name (`pylink`) and the Python import package
 name (`pylinkirc`) are also unchanged, so existing configuration files and plugins keep working.
 
 Licenses:
@@ -15,6 +15,7 @@ Changed files carry their original headers. Changes made in this fork are marked
 
 ## Releases
 
+- **3.2.1** (2026-11-07): on PyPI as `besilink`, working Docker image, BesiLink version strings.
 - **3.2.0** (2026-11-07): first BesiLink release, contains every change below. Notes in [RELNOTES.md](RELNOTES.md).
 
 ## Changes so far

@@ -1,3 +1,21 @@
+# BesiLink 3.2.1 (2026-11-07)
+
+### Packaging
+
+- **Published on PyPI as `besilink`** (`pip install besilink`). The import package (`pylinkirc`), the `pylink` command
+  and the config format are unchanged. Coming from `pylinkirc` (upstream PyLink or BesiLink 3.2.0): run
+  `pip uninstall pylinkirc` first, see [docs/besilink-install.md](docs/besilink-install.md#upgrading).
+- Releases are uploaded to PyPI by GitHub Actions with Trusted Publishing (no stored API token).
+- Dockerfile fixed for current setuptools (`pip install .` instead of the removed `setup.py install`), based on
+  `python:3.13-alpine`. CI now builds the image and smoke-tests it.
+- License metadata uses the SPDX expression `MPL-2.0`; both license files ship in the wheel.
+
+### Branding
+
+- `pylink -v`, the startup log line, the terminal title and the `version` command now say **BesiLink**.
+- The `version` command now points to the BesiLink source (`world.source`), as MPL-2.0 expects for a fork.
+  IRC-visible names (oper type "PyLink Service", relay server descriptions) are unchanged.
+
 # BesiLink 3.2.0 (2026-11-07)
 
 First release of **BesiLink**, a maintained fork of PyLink 3.1.0 (upstream archived on 2023-01-04). The command

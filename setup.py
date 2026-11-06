@@ -37,7 +37,8 @@ except OSError:
     long_description = None
 
 setup(
-    name='pylinkirc',
+    # Fork change: published on PyPI as 'besilink'; the import package stays 'pylinkirc'
+    name='besilink',
     version=version,
 
     description='BesiLink: maintained fork of PyLink IRC Services and Relay',
@@ -57,7 +58,8 @@ setup(
     maintainer='BajuBesi Labs',
 
     # License
-    license='MPL 2.0',
+    license='MPL-2.0',
+    license_files=['LICENSE.MPL2', 'LICENSE.CC-BY-SA-4.0'],
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -67,7 +69,6 @@ setup(
         'Intended Audience :: System Administrators',
         'Topic :: Communications :: Chat :: Internet Relay Chat',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
         'Environment :: Console',
 
         'Operating System :: OS Independent',

@@ -28,3 +28,31 @@ jobs:
       - name: Run tests
         working-directory: test
         run: python -m unittest -v
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build image
+        run: docker build -t besilink:ci .
+      - name: Smoke test
+        run: |
+          out=$(docker run --rm besilink:ci pylink -v)
+          echo "$out"
+          echo "$out" | grep -q "^BesiLink $(cat VERSION)"
+          docker run --rm besilink:ci python -c "import pylinkirc.protocols.inspircd, pylinkirc.protocols.unreal, pylinkirc.plugins.relay"
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Build sdist and wheel
+        run: |
+          pip install build twine
+          python -m build
+          twine check --strict dist/*
