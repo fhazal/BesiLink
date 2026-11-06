@@ -56,7 +56,7 @@ def uptime(irc, source, args):
     current_time = int(time.time())
     time_format = conf.conf.get('stats', {}).get('time_format', DEFAULT_TIME_FORMAT)
 
-    irc.reply("PyLink uptime: \x02%s\x02 (started on %s)" %
+    irc.reply("BesiLink uptime: \x02%s\x02 (started on %s)" %  # Fork change
               (timediff(world.start_ts, current_time),
                time.strftime(time_format, time.gmtime(world.start_ts))
               )

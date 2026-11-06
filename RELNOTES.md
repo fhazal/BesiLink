@@ -1,3 +1,16 @@
+# BesiLink 3.4.1 (2026-11-07)
+
+### Branding
+
+- The network map (`servermaps`) marks relay servers as "via BesiLink relay", and `uptime` (`stats`) reports
+  "BesiLink uptime".
+
+### Documentation
+
+- New install guide section [Tested setup: UnrealIRCd 6 + InspIRCd 4](docs/besilink-install.md#5-tested-setup-unrealircd-6--inspircd-4-as-real-server-links):
+  link blocks without a U-line, pinned TLS fingerprints, bracket nick tags with reserved tags, the Anope session
+  exception, claims, and oper permissions for the map/uptime plugins.
+
 # BesiLink 3.4.0 (2026-11-07)
 
 ### Feature changes

@@ -15,6 +15,7 @@ Changed files carry their original headers. Changes made in this fork are marked
 
 ## Releases
 
+- **3.4.1** (2026-11-07): BesiLink text in map and uptime; install guide section for the tested UnrealIRCd 6 + InspIRCd 4 setup.
 - **3.4.0** (2026-11-07): bracket relay nick tags (`Belon[SKT]`), `relay::tag_style` and `relay_nick_tag`.
 - **3.3.0** (2026-11-07): BesiLink names for relay servers and service clients, `relay::server_desc`; Unreal 6 link without U-line tested.
 - **3.2.1** (2026-11-07): on PyPI as `besilink`, working Docker image, BesiLink version strings.

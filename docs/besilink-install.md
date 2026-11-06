@@ -144,6 +144,91 @@ Then:
 See [relay-quickstart.md](relay-quickstart.md) for services compatibility notes (for example, turn off clone kills in
 Anope or Atheme) and for handling disputes.
 
+The service nick is `PyLink` unless you set `pylink::nick` (for example `nick: BesiLink`, then use `/msg BesiLink ...`).
+
+## 5. Tested setup: UnrealIRCd 6 + InspIRCd 4 as real server links
+
+This is the setup BesiLink runs in production: BesiLink on the same machine as one UnrealIRCd 6.2 server and one
+InspIRCd 4.12 server, linked to both over loopback TLS, with no U-line.
+
+**UnrealIRCd 6** (`unrealircd.conf` on the server BesiLink connects to; a TLS `serversonly` listen block must exist):
+
+```
+link besilink.example.net {
+    incoming { mask 127.0.0.1; }
+    password "change-me";
+    class servers;
+}
+# No ulines entry: relayed users stay kickable and bannable by your channel operators.
+```
+
+**InspIRCd 4** (`inspircd.conf` / `links.conf`):
+
+```
+<bind address="127.0.0.1" port="17979" type="servers" sslprofile="Servers">
+<link name="besilink.example.net" ipaddr="127.0.0.1" allowmask="127.0.0.1/32" port="17979"
+      sendpass="change-me-1" recvpass="change-me-2" sslprofile="Servers">
+```
+
+**BesiLink** (`pylink.yml`):
+
+```yaml
+servers:
+    unrealnet:
+        ip: 127.0.0.1
+        port: 6900                 # the Unreal TLS serversonly port
+        sendpass: "change-me"
+        recvpass: "change-me"
+        hostname: "besilink.example.net"
+        sid: "0BL"
+        sidrange: "7##"
+        netname: "Unreal Net"
+        protocol: unreal
+        maxnicklen: 30
+        ssl: true
+        ssl_fingerprint: "<sha256 of the Unreal server certificate>"
+        relay_nick_tag: "UNR"
+    inspnet:
+        ip: 127.0.0.1
+        port: 17979
+        sendpass: "change-me-2"    # InspIRCd's recvpass
+        recvpass: "change-me-1"    # InspIRCd's sendpass
+        hostname: "besilink.example.net"
+        sid: "0BL"
+        sidrange: "7##"
+        netname: "Insp Net"
+        protocol: inspircd
+        target_version: insp4
+        maxnicklen: 30
+        ssl: true
+        ssl_fingerprint: "<sha256 of the InspIRCd server certificate>"
+        relay_nick_tag: "INS"
+
+relay:
+    tag_style: brackets            # relay users appear as Nick[UNR] / Nick[INS]
+```
+
+BesiLink logs the uplink's fingerprint on the first connect ("Uplink's TLS/SSL certificate fingerprint ..."). Copy it
+into `ssl_fingerprint`; afterwards a different certificate is refused, and the log names the mismatch. Update the
+fingerprint when you replace a server certificate.
+
+**Things to know:**
+
+- **Nick length:** set the same, large enough nick length on every network (`maxnick="30"` in InspIRCd's `<limits>`).
+  Tags count towards it; long nicks are cut before the tag.
+- **Reserve the tags** for local users on every server: UnrealIRCd `ban nick { mask "*[INS]"; reason "Reserved for
+  relay users"; }`, InspIRCd `<badnick nick="*[UNR]" reason="Reserved for relay users">`. These only affect local
+  users, so BesiLink can still introduce relayed users.
+- **Anope on InspIRCd:** relayed users carry the IP `0.0.0.0`, so `os_session` would kill them after the session limit.
+  Add an exception: `/msg OperServ EXCEPTION ADD 0.0.0.0 100 BesiLink relay users`. Anope on UnrealIRCd skips users
+  without an IP and needs nothing.
+- **UnrealIRCd server notices** show relayed users with an empty IP (`[]`) and only announce them when they leave, so
+  connection-flood scripts that key on IPs do not react to them.
+- **Claim:** run `/msg BesiLink claim #chan net1,net2,net3` so operators and services on every network may set modes.
+- **Network map and uptime for opers:** load the `servermaps` and `stats` plugins and grant
+  `"$ircop": ["servermaps.map", "servermaps.localmap", "stats.uptime", "stats.u"]`. Keep `stats.c` / `stats.o`
+  (link blocks, accounts) for admins only.
+
 ## Upgrading
 
 ```bash
