@@ -204,6 +204,7 @@ servers:
 
         # InspIRCd specific option: sets the target InspIRCd protocol version.
         # Valid values include:
+        #  "insp4"  - InspIRCd 4.x   (1206) [BesiLink addition]
         #  "insp3"  - InspIRCd 3.x   (1205) [DEFAULT]
         #  "insp20" - InspIRCd 2.0.x (1202) [legacy, deprecated]
         #target_version: insp3

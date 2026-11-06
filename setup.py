@@ -40,15 +40,21 @@ setup(
     name='pylinkirc',
     version=version,
 
-    description='PyLink IRC Services',
+    description='BesiLink: maintained fork of PyLink IRC Services and Relay',
     long_description=long_description,
     long_description_content_type='text/markdown',
 
-    url='https://github.com/jlu5/PyLink',
+    url='https://github.com/fhazal/BesiLink',
+    project_urls={
+        'Source': 'https://github.com/fhazal/BesiLink',
+        'Issues': 'https://github.com/fhazal/BesiLink/issues',
+        'Original project': 'https://github.com/PyLink/PyLink',
+    },
 
     # Author details
     author='James Lu',
     author_email='james@overdrivenetworks.com',
+    maintainer='BajuBesi Labs',
 
     # License
     license='MPL 2.0',
@@ -74,6 +80,9 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
     ],
 
     keywords='IRC services relay',

@@ -13,6 +13,10 @@ Licenses:
 Changed files carry their original headers. Changes made in this fork are marked in the code with
 "Fork change" or "Fork addition" comments.
 
+## Releases
+
+- **3.2.0** (2026-11-07): first BesiLink release, contains every change below. Notes in [RELNOTES.md](RELNOTES.md).
+
 ## Changes so far
 
 | Area | Change |

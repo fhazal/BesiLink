@@ -1,3 +1,28 @@
+# BesiLink 3.2.0 (2026-11-07)
+
+First release of **BesiLink**, a maintained fork of PyLink 3.1.0 (upstream archived on 2023-01-04). The command
+(`pylink`), the Python package (`pylinkirc`) and the configuration format are unchanged, so existing setups can upgrade
+in place. See [FORK.md](FORK.md) for what was tested.
+
+### Feature changes
+
+- protocols/inspircd: **native InspIRCd 4 support** with `target_version: insp4` (protocol 1206): `SERVER` without the
+  hops field, `UID` with real and displayed username, two-parameter `FHOST` / `FIDENT`. `insp3` stays the default.
+- protocols/unreal: read `PREFIX=` from `PROTOCTL`, so UnrealIRCd 6 networks with `chanowner`, `chanadmin` or `halfop`
+  blacklisted (for example `PREFIX=(ov)@+`) are handled correctly.
+
+### Bug fixes
+
+- Fix `SSL: BAD_RECORD_MAC` / "Connection lost" on TLS links with Python 3.12 and TLS 1.3: reads and writes on one SSL
+  socket are now serialised. The send retry loop no longer spins a CPU core and partial writes are completed.
+- utils: `clear_persistent_channels()` no longer raises `KeyError` on shutdown when no relay channels exist.
+
+### Internal improvements
+
+- New tests for UnrealIRCd `PREFIX` handling and InspIRCd 4 `UID` / `SERVER` parsing.
+- GitHub Actions CI runs the test suite on Python 3.9 to 3.13.
+- New install guide: [docs/besilink-install.md](docs/besilink-install.md).
+
 # PyLink 3.1.0 (2023-01-03)
 
 This will be my (**@jlu5**'s) last release.

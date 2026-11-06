@@ -2,6 +2,7 @@
 *.yml
 !example-*.yml
 !.*.yml
+!.github/workflows/*.yml
 
 # Generated from .drone.jsonnet
 .drone.yml

@@ -1,5 +1,8 @@
 # BesiLink
 
+[![tests](https://github.com/fhazal/BesiLink/actions/workflows/tests.yml/badge.svg)](https://github.com/fhazal/BesiLink/actions/workflows/tests.yml)
+[![release](https://img.shields.io/github/v/release/fhazal/BesiLink)](https://github.com/fhazal/BesiLink/releases)
+
 **BesiLink is a maintained fork of [PyLink](https://github.com/PyLink/PyLink)** (originally by James Lu and contributors),
 kept up by BajuBesi Labs. The original project was archived on 2023-01-04 and is no longer maintained.
 
@@ -7,6 +10,10 @@ BesiLink keeps PyLink's code, licenses, command name (`pylink`) and Python packa
 configuration files and plugins keep working. What is different so far: a fix for TLS connections on current Python,
 UnrealIRCd 6 prefix handling, and native InspIRCd 4 support (`target_version: insp4`). See [FORK.md](FORK.md) for the
 full list of changes, what has been tested and what has not.
+
+- **Install:** [docs/besilink-install.md](docs/besilink-install.md)
+- **Release notes:** [RELNOTES.md](RELNOTES.md), downloads on the [releases page](https://github.com/fhazal/BesiLink/releases)
+- **Bugs and questions:** [issues](https://github.com/fhazal/BesiLink/issues)
 
 BesiLink is not affiliated with the original PyLink authors. The rest of this file is the original PyLink README.
 
