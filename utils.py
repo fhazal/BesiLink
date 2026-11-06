@@ -464,7 +464,9 @@ class ServiceBot():
 
 
         else:  # when irc is None
-            del self.dynamic_channels[namespace]
+            # Fork change: don't fail when the namespace has no persistent channels yet (this used to
+            # log a KeyError traceback every time the relay plugin shut down with no relay channels).
+            self.dynamic_channels.pop(namespace, None)
 
             for netname, chanlist in dch_data.items():
                 log.debug('(%s/%s) Globally clearing persistent channels %r from namespace %r',
